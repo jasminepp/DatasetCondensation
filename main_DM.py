@@ -67,12 +67,14 @@ def main():
         indices_class = [[] for c in range(num_classes)]
 
         images_all = [torch.unsqueeze(dst_train[i][0], dim=0) for i in range(len(dst_train))]
+        print(f"images_all.shape: {images_all.shape}")
+        print(f"len(dst_train): {len(dst_train)}")
         labels_all = [dst_train[i][1] for i in range(len(dst_train))]
         for i, lab in enumerate(labels_all):
             indices_class[lab].append(i)
         images_all = torch.cat(images_all, dim=0).to(args.device)
         labels_all = torch.tensor(labels_all, dtype=torch.long, device=args.device)
-
+        print(f"images_all.shape: {images_all.shape}")
 
 
         for c in range(num_classes):
@@ -87,6 +89,7 @@ def main():
 
 
         ''' initialize the synthetic data '''
+        #初始化synthetic data 可以从真实数据/随机初始化
         image_syn = torch.randn(size=(num_classes*args.ipc, channel, im_size[0], im_size[1]), dtype=torch.float, requires_grad=True, device=args.device)
         label_syn = torch.tensor([np.ones(args.ipc)*i for i in range(num_classes)], dtype=torch.long, requires_grad=False, device=args.device).view(-1) # [0,0,0, 1,1,1, ..., 9,9,9]
 
